@@ -47,6 +47,23 @@ header {
   margin-top: 10px;
   letter-spacing: 0.2em;
 }
+.site-nav {
+  font-family: var(--font-gothic);
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+}
+.site-nav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+.site-nav a:hover { color: var(--ink); }
+.site-nav a.active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 700; }
 
 .layout {
   max-width: 1380px;
@@ -493,6 +510,79 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
   color: var(--ink-soft);
   text-align: right;
 }
+
+/* ---- articles ---- */
+.article-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 24px;
+}
+.article-item {
+  background: #fff;
+  padding: 22px 24px;
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.15s;
+}
+.article-item:hover { background: #f9f9f9; }
+.article-item h3 {
+  font-family: var(--font-gothic);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: none;
+  padding: 0;
+  margin: 0 0 6px;
+}
+.article-item p { font-size: 13px; color: #666; margin: 0; }
+.article-item .article-date {
+  font-family: var(--font-gothic);
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.article-meta {
+  font-family: var(--font-gothic);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+.page table.info {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-gothic);
+  font-size: 12.5px;
+  margin: 12px 0 16px;
+}
+.page table.info th, .page table.info td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+}
+.page table.info th { background: var(--band-soft); font-weight: 700; white-space: nowrap; }
+.related-box {
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+  margin-top: 28px;
+}
+.related-box h4 {
+  font-family: var(--font-gothic);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.related-box ul { list-style: none; }
+.related-box li { margin: 4px 0; font-size: 13px; }
+.related-box a { color: var(--ink-strong); }
 
 /* ---- footer ---- */
 .site-footer {

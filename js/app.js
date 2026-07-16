@@ -305,3 +305,9 @@ renderFilters();
 renderGrid();
 renderRecipes();
 renderGuide();
+
+// 記事等からの直リンク対応（index.html#豆id で詳細を開く）
+if (location.hash) {
+  const target = location.hash.slice(1);
+  if (BEANS.some((b) => b.id === target)) showDetail(target);
+}
