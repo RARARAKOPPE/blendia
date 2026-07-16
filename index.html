@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLENDIA — コーヒー豆とブレンド提案</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1 class="logo">BLEND<span>IA</span></h1>
+    <p class="tagline">豆を選ぶと、相性のいいブレンド相手をご提案します</p>
+  </header>
+
+  <div class="layout">
+  <main>
+    <div class="search-box">
+      <input id="search" type="search" placeholder="豆の名称・産地・品種・風味で検索（例: モカ / ケニア / ベリー）" autocomplete="off" />
+      <span id="result-count" class="result-count"></span>
+    </div>
+    <div id="filters"></div>
+    <div id="grid"></div>
+
+    <div class="ad-slot ad-banner">広告スペース（728×90）</div>
+
+    <section class="recipes-section">
+      <h2>定番ブレンドレシピ</h2>
+      <p class="section-sub">まずはここから。プロも使う王道の組み合わせです。豆名をクリックすると詳細が見られます。</p>
+      <div id="recipes"></div>
+    </section>
+
+    <section class="guide-section">
+      <h2>ブレンドの基礎知識</h2>
+      <div id="guide"></div>
+    </section>
+  </main>
+
+  <aside class="ad-rail">
+    <div class="ad-slot ad-rect">広告スペース<br>（300×250）</div>
+    <div class="ad-slot ad-sky">広告スペース<br>（300×600）</div>
+  </aside>
+  </div>
+
+  <footer class="site-footer">
+    <nav>
+      <a href="./">ホーム</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="about.html">運営者情報・お問い合わせ</a>
+    </nav>
+    <p>© 2026 BLENDIA</p>
+  </footer>
+
+  <div id="overlay"></div>
+  <aside id="detail"></aside>
+
+  <script src="js/data.js"></script>
+  <script src="js/blend.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
