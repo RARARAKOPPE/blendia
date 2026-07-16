@@ -19,15 +19,24 @@ function priceTier(bean) {
 
 // 販売サイトの検索リンク（検索ジェネレーターとしての出口）
 // 収益化できる出口だけを置く（Amazon/楽天はアフィリエイト対象。珈琲問屋も楽天店経由なら対象）
+const RAKUTEN_AFF_ID = "55d289f4.46df8fc2.55d289f5.0e8ffc7e";
+
+// 楽天の任意URLをアフィリエイト計測付きリンクに変換
+function rakutenAff(url) {
+  return `https://hb.afl.rakuten.co.jp/hgc/${RAKUTEN_AFF_ID}/?pc=${encodeURIComponent(url)}&m=${encodeURIComponent(url)}`;
+}
+
 function shopLinks(bean) {
   const q = encodeURIComponent(`${bean.country} ${bean.name} コーヒー豆`);
   const qTonya = encodeURIComponent(`珈琲問屋 ${bean.name}`);
+  const rakutenUrl = `https://search.rakuten.co.jp/search/mall/${q}/`;
+  const tonyaUrl = `https://search.rakuten.co.jp/search/mall/${qTonya}/`;
   return `
     <div class="shop-links">
       <p class="shop-links-label">この豆を販売サイトで探す</p>
       <a href="https://www.amazon.co.jp/s?k=${q}" target="_blank" rel="noopener" class="shop-btn">Amazon</a>
-      <a href="https://search.rakuten.co.jp/search/mall/${q}/" target="_blank" rel="noopener" class="shop-btn">楽天市場</a>
-      <a href="https://search.rakuten.co.jp/search/mall/${qTonya}/" target="_blank" rel="noopener" class="shop-btn">珈琲問屋（楽天店）</a>
+      <a href="${rakutenAff(rakutenUrl)}" target="_blank" rel="nofollow sponsored noopener" class="shop-btn">楽天市場</a>
+      <a href="${rakutenAff(tonyaUrl)}" target="_blank" rel="nofollow sponsored noopener" class="shop-btn">珈琲問屋（楽天店）</a>
     </div>`;
 }
 
