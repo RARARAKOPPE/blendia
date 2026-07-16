@@ -671,6 +671,12 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
   color: #bbb;
   letter-spacing: 0.1em;
 }
+.site-footer .aff-note {
+  margin-top: 20px;
+  font-size: 10.5px;
+  color: #b0a595;
+  letter-spacing: 0.05em;
+}
 
 /* ---- guide ---- */
 #guide {

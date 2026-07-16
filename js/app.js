@@ -20,6 +20,7 @@ function priceTier(bean) {
 // 販売サイトの検索リンク（検索ジェネレーターとしての出口）
 // 収益化できる出口だけを置く（Amazon/楽天はアフィリエイト対象。珈琲問屋も楽天店経由なら対象）
 const RAKUTEN_AFF_ID = "55d289f4.46df8fc2.55d289f5.0e8ffc7e";
+const AMAZON_TAG = "blendia-22";
 
 // 楽天の任意URLをアフィリエイト計測付きリンクに変換
 function rakutenAff(url) {
@@ -34,7 +35,7 @@ function shopLinks(bean) {
   return `
     <div class="shop-links">
       <p class="shop-links-label">この豆を販売サイトで探す</p>
-      <a href="https://www.amazon.co.jp/s?k=${q}" target="_blank" rel="noopener" class="shop-btn">Amazon</a>
+      <a href="https://www.amazon.co.jp/s?k=${q}&tag=${AMAZON_TAG}" target="_blank" rel="nofollow sponsored noopener" class="shop-btn">Amazon</a>
       <a href="${rakutenAff(rakutenUrl)}" target="_blank" rel="nofollow sponsored noopener" class="shop-btn">楽天市場</a>
       <a href="${rakutenAff(tonyaUrl)}" target="_blank" rel="nofollow sponsored noopener" class="shop-btn">珈琲問屋（楽天店）</a>
     </div>`;
