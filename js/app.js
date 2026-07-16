@@ -18,16 +18,16 @@ function priceTier(bean) {
 }
 
 // 販売サイトの検索リンク（検索ジェネレーターとしての出口）
+// 収益化できる出口だけを置く（Amazon/楽天はアフィリエイト対象。珈琲問屋も楽天店経由なら対象）
 function shopLinks(bean) {
   const q = encodeURIComponent(`${bean.country} ${bean.name} コーヒー豆`);
-  const qTonya = encodeURIComponent(`site:tonya.co.jp ${bean.name}`);
+  const qTonya = encodeURIComponent(`珈琲問屋 ${bean.name}`);
   return `
     <div class="shop-links">
       <p class="shop-links-label">この豆を販売サイトで探す</p>
       <a href="https://www.amazon.co.jp/s?k=${q}" target="_blank" rel="noopener" class="shop-btn">Amazon</a>
       <a href="https://search.rakuten.co.jp/search/mall/${q}/" target="_blank" rel="noopener" class="shop-btn">楽天市場</a>
-      <a href="https://www.google.com/search?q=${qTonya}" target="_blank" rel="noopener" class="shop-btn">珈琲問屋</a>
-      <a href="https://www.google.com/search?q=${q}&tbm=shop" target="_blank" rel="noopener" class="shop-btn">Google</a>
+      <a href="https://search.rakuten.co.jp/search/mall/${qTonya}/" target="_blank" rel="noopener" class="shop-btn">珈琲問屋（楽天店）</a>
     </div>`;
 }
 
