@@ -191,7 +191,15 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
+  /* DBが増えても縦に伸びないよう、数段だけ表示してこの中で個別スクロール */
+  max-height: 60vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
+/* スクロール可能なことが分かるよう控えめなスクロールバー */
+#grid::-webkit-scrollbar { width: 8px; }
+#grid::-webkit-scrollbar-thumb { background: #d8cdbd; border-radius: 4px; }
+#grid::-webkit-scrollbar-track { background: transparent; }
 .card {
   background: var(--surface);
   padding: 20px 18px;
