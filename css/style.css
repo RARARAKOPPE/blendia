@@ -106,6 +106,10 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
   .ad-rail { display: none; }
 }
 
+/* 記事・一覧ページ: 読みやすい本文幅 + 広告レール。レール非表示時も中央寄せ維持 */
+.layout { justify-content: center; }
+.layout > .page { flex: 1; margin: 0; max-width: 760px; }
+
 /* ---- search ---- */
 .search-box {
   display: flex;
