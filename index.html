@@ -25,13 +25,21 @@
     </div>
     <div id="filters"></div>
     <div id="grid"></div>
+    <p class="price-legend">価格帯の目安：<b>¥</b> 手頃 ／ <b>¥¥</b> 標準 ／ <b>¥¥¥</b> プレミアム<span>※実売価格は各豆の販売サイトでご確認ください</span></p>
 
     <div class="ad-slot ad-banner">広告スペース（728×90）</div>
 
     <section class="recipes-section">
-      <h2>定番ブレンドレシピ</h2>
-      <p class="section-sub">まずはここから。プロも使う王道の組み合わせです。豆名をクリックすると詳細が見られます。</p>
-      <div id="recipes"></div>
+      <div class="section-head">
+        <h2>定番ブレンドレシピ</h2>
+        <div class="slider-ctrl">
+          <button id="recipe-shuffle" class="mini-btn" type="button">↻ 別のレシピ</button>
+          <button id="recipe-prev" class="arrow-btn" type="button" aria-label="前のレシピ">‹</button>
+          <button id="recipe-next" class="arrow-btn" type="button" aria-label="次のレシピ">›</button>
+        </div>
+      </div>
+      <p class="section-sub">まずはここから。豆名をクリックすると詳細が見られます。左右にスライドで他のレシピも。</p>
+      <div id="recipes" class="recipe-slider"></div>
     </section>
 
     <section class="guide-section">

@@ -261,35 +261,85 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeDetail();
 });
 
-// ---- 定番レシピ ----
+// ---- 定番レシピ（スライダー） ----
+function shuffled(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function recipeCardHTML(r) {
+  const items = r.items.map(([id, w]) => ({ bean: BEANS.find((b) => b.id === id), weight: w }));
+  const mixed = mixProfile(items);
+  const ratioLabel = items.map((it) => it.weight).join(" : ");
+  const beanLinks = items
+    .map(
+      (it) => `<button class="link-btn recipe-bean" data-goto="${it.bean.id}">${it.bean.name}</button>`
+    )
+    .join('<span class="recipe-x">×</span>');
+  return `
+    <div class="recipe-card">
+      <div class="recipe-head">
+        <h3>${r.name}</h3>
+        <span class="tag goal-tag">${r.goal}</span>
+      </div>
+      <div class="recipe-beans">${beanLinks}</div>
+      <p class="recipe-ratio">配合比 <strong>${ratioLabel}</strong></p>
+      <p class="recipe-comment">${r.comment}</p>
+      <div class="recipe-radar">${radarSVG(mixed, 150, "var(--accent2)")}</div>
+    </div>`;
+}
+
+let recipeTimer = null;
+
 function renderRecipes() {
   const box = document.getElementById("recipes");
-  box.innerHTML = RECIPES.map((r) => {
-    const items = r.items.map(([id, w]) => ({ bean: BEANS.find((b) => b.id === id), weight: w }));
-    const mixed = mixProfile(items);
-    const ratioLabel = items.map((it) => it.weight).join(" : ");
-    const beanLinks = items
-      .map(
-        (it) =>
-          `<button class="link-btn recipe-bean" data-goto="${it.bean.id}">${it.bean.name}</button>`
-      )
-      .join('<span class="recipe-x">×</span>');
-    return `
-      <div class="recipe-card">
-        <div class="recipe-head">
-          <h3>${r.name}</h3>
-          <span class="tag goal-tag">${r.goal}</span>
-        </div>
-        <div class="recipe-beans">${beanLinks}</div>
-        <p class="recipe-ratio">配合比 <strong>${ratioLabel}</strong></p>
-        <p class="recipe-comment">${r.comment}</p>
-        <div class="recipe-radar">${radarSVG(mixed, 150, "var(--accent2)")}</div>
-      </div>`;
-  }).join("");
-
+  // 読み込み直すたびに並びをシャッフル（＝表示されるレシピが入れ替わる）
+  box.innerHTML = shuffled(RECIPES).map(recipeCardHTML).join("");
+  box.scrollLeft = 0;
   box.querySelectorAll("[data-goto]").forEach((btn) =>
     btn.addEventListener("click", () => showDetail(btn.dataset.goto))
   );
+}
+
+function recipeStep() {
+  const box = document.getElementById("recipes");
+  const first = box.querySelector(".recipe-card");
+  return first ? first.offsetWidth + 14 : 280; // カード幅 + gap
+}
+
+function slideRecipes(dir) {
+  const box = document.getElementById("recipes");
+  const atEnd = box.scrollLeft + box.clientWidth >= box.scrollWidth - 4;
+  if (dir > 0 && atEnd) box.scrollTo({ left: 0, behavior: "smooth" });
+  else box.scrollBy({ left: dir * recipeStep(), behavior: "smooth" });
+}
+
+function startRecipeAuto() {
+  stopRecipeAuto();
+  recipeTimer = setInterval(() => slideRecipes(1), 6000); // 一定期間ごとに自動送り
+}
+function stopRecipeAuto() {
+  if (recipeTimer) clearInterval(recipeTimer);
+  recipeTimer = null;
+}
+
+function initRecipeSlider() {
+  const box = document.getElementById("recipes");
+  document.getElementById("recipe-prev").addEventListener("click", () => slideRecipes(-1));
+  document.getElementById("recipe-next").addEventListener("click", () => slideRecipes(1));
+  document.getElementById("recipe-shuffle").addEventListener("click", () => {
+    renderRecipes();
+    startRecipeAuto();
+  });
+  // 閲覧中は自動送りを止める
+  box.addEventListener("mouseenter", stopRecipeAuto);
+  box.addEventListener("mouseleave", startRecipeAuto);
+  box.addEventListener("touchstart", stopRecipeAuto, { passive: true });
+  startRecipeAuto();
 }
 
 // ---- 基礎知識 ----
@@ -306,6 +356,7 @@ function renderGuide() {
 renderFilters();
 renderGrid();
 renderRecipes();
+initRecipeSlider();
 renderGuide();
 
 // 記事等からの直リンク対応（index.html#豆id で詳細を開く）
