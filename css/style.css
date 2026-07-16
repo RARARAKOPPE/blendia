@@ -334,6 +334,17 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
 }
 .shop-btn:hover { background: #4a3b35; }
 
+.text-link {
+  font-family: var(--font-gothic);
+  color: var(--ink-strong);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.text-link:hover { color: #4a3b35; }
+
 .detail-radar {
   border: 1px solid var(--line);
   padding: 16px;
