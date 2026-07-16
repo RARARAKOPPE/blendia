@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
+  <style>
+    .ring { stroke: #231815; }
+    .bean { fill: #231815; }
+    .cut { stroke: #fff; }
+    @media (prefers-color-scheme: dark) {
+      .ring { stroke: #f3ebe1; }
+      .bean { fill: #f3ebe1; }
+      .cut { stroke: #1a1a1a; }
+    }
+  </style>
+  <circle r="44" fill="none" class="ring" stroke-width="5"/>
+  <g class="bean">
+    <g transform="translate(-13,-2) rotate(-28)">
+      <ellipse rx="13" ry="19"/>
+      <path d="M0,-17.5 C-5.5,-10 5.5,-4 0,1 C-5.5,6 5.5,11 0,17.5" fill="none" class="cut" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(13,2) rotate(152)">
+      <ellipse rx="13" ry="19"/>
+      <path d="M0,-17.5 C-5.5,-10 5.5,-4 0,1 C-5.5,6 5.5,11 0,17.5" fill="none" class="cut" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
