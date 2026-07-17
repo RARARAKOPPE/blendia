@@ -230,6 +230,24 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
 .chip:hover { border-color: var(--ink); color: var(--ink); }
 .chip.active { background: var(--band); border-color: var(--band); color: #fff; }
 
+/* ---- taste sort ---- */
+.taste-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -14px 0 16px;
+}
+.taste-label {
+  font-family: var(--font-gothic);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+#taste-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.taste-chip.active { background: var(--ink-strong); border-color: var(--ink-strong); }
+
 /* ---- grid / cards ---- */
 #grid {
   display: grid;

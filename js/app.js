@@ -9,6 +9,7 @@ const resultCount = document.getElementById("result-count");
 
 let activeCountry = "すべて";
 let searchQuery = "";
+let activeTaste = "none"; // 目指す味での並び替え（基礎知識「ゴールを決めてから組む」の実践）
 
 // 参考価格帯（3段階）。金額は表示せず、実売価格は販売サイト側で確認してもらう方針
 function priceTier(bean) {
@@ -114,10 +115,34 @@ function renderGrid() {
   let beans = activeCountry === "すべて" ? BEANS : BEANS.filter((b) => b.country === activeCountry);
   const q = searchQuery.trim().toLowerCase();
   if (q) beans = beans.filter((b) => matchesQuery(b, q));
+  if (activeTaste !== "none" && GOALS[activeTaste]) {
+    const goal = GOALS[activeTaste];
+    beans = beans.slice().sort((a, b) => goalDistance(a.profile, goal) - goalDistance(b.profile, goal));
+  }
   grid.innerHTML = beans.length
     ? beans.map(beanCard).join("")
     : `<p class="empty">該当する豆が見つかりませんでした。</p>`;
+  grid.scrollTop = 0;
   resultCount.textContent = `${beans.length}銘柄`;
+}
+
+function renderTasteFilters() {
+  const box = document.getElementById("taste-filters");
+  const chips = [`<button class="chip taste-chip ${activeTaste === "none" ? "active" : ""}" data-taste="none">指定なし</button>`]
+    .concat(
+      Object.entries(GOALS).map(
+        ([key, g]) =>
+          `<button class="chip taste-chip ${key === activeTaste ? "active" : ""}" data-taste="${key}">${g.label}</button>`
+      )
+    );
+  box.innerHTML = chips.join("");
+  box.querySelectorAll("[data-taste]").forEach((btn) =>
+    btn.addEventListener("click", () => {
+      activeTaste = btn.dataset.taste;
+      renderTasteFilters();
+      renderGrid();
+    })
+  );
 }
 
 function renderFilters() {
@@ -364,6 +389,7 @@ function renderGuide() {
 }
 
 renderFilters();
+renderTasteFilters();
 renderGrid();
 renderRecipes();
 initRecipeSlider();
