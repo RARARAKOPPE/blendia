@@ -40,10 +40,22 @@ const rowsBox = document.getElementById("blend-rows");
 const resultBox = document.getElementById("blend-result");
 const addBtn = document.getElementById("add-bean");
 
+// 国名でグループ化（optgroup）。リストでは国名が見出しに出て、選択後は銘柄名だけが表示される
 function beanOptions(selectedId) {
-  return BEANS.map(
-    (b) => `<option value="${b.id}" ${b.id === selectedId ? "selected" : ""}>${b.country} / ${b.name}</option>`
-  ).join("");
+  const byCountry = new Map();
+  for (const b of BEANS) {
+    if (!byCountry.has(b.country)) byCountry.set(b.country, []);
+    byCountry.get(b.country).push(b);
+  }
+  let html = "";
+  for (const [country, beans] of byCountry) {
+    html += `<optgroup label="${country}">`;
+    for (const b of beans) {
+      html += `<option value="${b.id}" ${b.id === selectedId ? "selected" : ""}>${b.name}</option>`;
+    }
+    html += `</optgroup>`;
+  }
+  return html;
 }
 
 function renderRows() {
