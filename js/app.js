@@ -165,6 +165,33 @@ function miniProfileBars(profile) {
 
 let activeGoal = "balance";
 
+// その豆が登場する定番レシピを探す（自動診断のTOP3とは別に、編集部セレクトとして必ず表示する）
+function findRecipesForBean(beanId) {
+  return RECIPES.filter((r) => r.items.some(([id]) => id === beanId));
+}
+
+function recipeMatchCard(bean, recipe) {
+  const selfWeight = recipe.items.find(([id]) => id === bean.id)[1];
+  const others = recipe.items
+    .filter(([id]) => id !== bean.id)
+    .map(([id, w]) => ({ bean: BEANS.find((b) => b.id === id), weight: w }));
+  const ratioLabel = [selfWeight, ...others.map((o) => o.weight)].join(" : ");
+  const partnerNames = others.map((o) => o.bean.name).join(" + ");
+  const partnerButtons = others
+    .map((o) => `<button class="link-btn" data-goto="${o.bean.id}">${o.bean.name}を見る →</button>`)
+    .join("");
+  return `
+    <div class="recipe-match-card">
+      <div class="recipe-match-head">
+        <h4>${recipe.name}</h4>
+        <span class="tag goal-tag">${recipe.goal}</span>
+      </div>
+      <p class="recipe-match-ratio">この豆 : ${partnerNames} = <strong>${ratioLabel}</strong></p>
+      <p class="recipe-match-comment">${recipe.comment}</p>
+      <div class="recipe-match-links">${partnerButtons}</div>
+    </div>`;
+}
+
 function recCard(bean, rec, rank) {
   const p = rec.partner;
   const [ra, rb] = rec.ratio;
@@ -196,6 +223,7 @@ function showDetail(id) {
   if (!bean) return;
   const recs = recommendBlends(bean, BEANS, 3, activeGoal);
   const role = beanRole(bean);
+  const recipeMatches = findRecipesForBean(id);
 
   const goalChips = Object.entries(GOALS)
     .map(
@@ -235,6 +263,18 @@ function showDetail(id) {
         ${miniProfileBars(bean.profile)}
       </div>
     </div>
+
+    ${
+      recipeMatches.length
+        ? `<section class="recipe-match-section">
+      <h3>この豆を使った定番レシピ</h3>
+      <p class="rec-sub">編集部セレクトの組み合わせです。豆名をクリックすると相手の豆の詳細に移動します。</p>
+      <div class="recipe-match-list">
+        ${recipeMatches.map((r) => recipeMatchCard(bean, r)).join("")}
+      </div>
+    </section>`
+        : ""
+    }
 
     <section class="rec-section">
       <h3>この豆とブレンドするなら</h3>

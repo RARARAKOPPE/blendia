@@ -450,6 +450,29 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
 .bar-track { flex: 1; height: 4px; background: var(--band-soft); }
 .bar-fill { height: 100%; background: var(--ink); }
 
+/* ---- recipe matches (定番レシピでの組み合わせ) ---- */
+.recipe-match-section { margin-top: 36px; }
+.recipe-match-section h3 {
+  font-family: var(--font-gothic);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  background: var(--ink-strong);
+  color: #fff;
+  padding: 7px 14px;
+}
+.recipe-match-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.recipe-match-card {
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+}
+.recipe-match-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.recipe-match-head h4 { font-family: var(--font-gothic); font-size: 13.5px; font-weight: 700; }
+.recipe-match-ratio { font-family: var(--font-gothic); font-size: 12.5px; margin-bottom: 6px; }
+.recipe-match-ratio strong { font-size: 14px; color: var(--ink-strong); }
+.recipe-match-comment { font-size: 12.5px; color: #555; margin-bottom: 8px; }
+.recipe-match-links { display: flex; flex-wrap: wrap; gap: 12px; }
+
 /* ---- recommendations ---- */
 .rec-section { margin-top: 36px; }
 .rec-section h3 {
