@@ -160,7 +160,14 @@ function recommendBlends(bean, beans, topN = 3, goalKey = "balance") {
 
 // items = [{bean, weight}] を受け取り、味わい・完成度・ゴール適合率などを返す
 function analyzeBlend(items) {
-  const valid = items.filter((it) => it.bean && it.weight > 0);
+  // 同じ豆が複数行に分かれていても1つに統合（同一豆同士を「同産地ペア」として誤減点しないため）
+  const byId = new Map();
+  for (const it of items) {
+    if (!it.bean || it.weight <= 0) continue;
+    if (byId.has(it.bean.id)) byId.get(it.bean.id).weight += it.weight;
+    else byId.set(it.bean.id, { bean: it.bean, weight: it.weight });
+  }
+  const valid = [...byId.values()];
   const total = valid.reduce((s, it) => s + it.weight, 0);
   if (!valid.length || total <= 0) return null;
 
