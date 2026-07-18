@@ -707,6 +707,16 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
 }
 .pick-box h4 { font-family: var(--font-gothic); font-size: 14px; margin-bottom: 6px; }
 .pick-box p { font-size: 12.5px; margin-bottom: 10px; }
+.pick-box-body { display: flex; gap: 16px; align-items: flex-start; }
+.pick-box-img-link { flex-shrink: 0; }
+.pick-box-img { width: 96px; height: 96px; object-fit: cover; border: 1px solid var(--line); display: block; }
+.pick-box-text { flex: 1; min-width: 0; }
+.pick-box-text h4 { margin-bottom: 6px; }
+.pick-box-text p { margin-bottom: 10px; }
+@media (max-width: 480px) {
+  .pick-box-body { flex-direction: column; }
+  .pick-box-img { width: 100%; height: auto; max-width: 160px; }
+}
 .page table.info {
   width: 100%;
   border-collapse: collapse;
