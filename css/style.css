@@ -810,11 +810,12 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
 /* ---- ブレンドをつくる（builder） ---- */
 .builder {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 24px;
   margin: 20px 0 8px;
   align-items: start;
 }
+.builder-picker, .builder-output { min-width: 0; }
 @media (max-width: 640px) { .builder { grid-template-columns: 1fr; } }
 
 .builder-picker, .builder-output {
