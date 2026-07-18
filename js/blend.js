@@ -219,15 +219,58 @@ function analyzeBlend(items) {
   else if (score >= 50) scoreLabel = "悪くない配合です";
   else scoreLabel = "少し尖った配合です";
 
-  // 味わいの要約（値の高い2軸）
+  // 味わいの要約（フレーバーノート×軸の強度×プロファイルの形から組み立て、配合ごとに文が変わる）
   const TRAIT = {
-    acidity: "明るい酸味", body: "重厚なコク", sweetness: "ふくよかな甘み",
-    bitterness: "しっかりした苦味", aroma: "華やかな香り", fruity: "豊かな果実味",
+    acidity: "酸味", body: "コク", sweetness: "甘み",
+    bitterness: "苦味", aroma: "香り", fruity: "果実味",
   };
-  const topAxes = AXES.map((ax) => ({ key: ax.key, v: profile[ax.key] }))
-    .sort((a, b) => b.v - a.v)
-    .slice(0, 2);
-  const taste = `${TRAIT[topAxes[0].key]}と${TRAIT[topAxes[1].key]}が主役の、${GOALS[topGoal].label}系の味わい。${cupComment(profile)}`;
+
+  // 配合比で重み付けした主要フレーバーノート（豆が変われば必ず変わる部分）
+  const noteW = {};
+  for (const it of valid) for (const n of it.bean.notes) noteW[n] = (noteW[n] || 0) + it.weight;
+  const topNotes = Object.entries(noteW)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 2)
+    .map(([n]) => NOTE_LABELS[n]);
+
+  const sortedAxes = AXES.map((ax) => ({ key: ax.key, v: profile[ax.key] })).sort((a, b) => b.v - a.v);
+  const top1 = sortedAxes[0];
+  const top2 = sortedAxes[1];
+  const low = sortedAxes[sortedAxes.length - 1];
+  const intensity = (v) =>
+    v >= 4.5 ? "際立つ" : v >= 4 ? "しっかりとした" : v >= 3.4 ? "ほどよい" : "穏やかな";
+
+  // 第1文: 具体的なフレーバー + 主役2軸の強度
+  const lead = `${topNotes.join("や")}を思わせる風味に、${intensity(top1.v)}${TRAIT[top1.key]}と${intensity(top2.v)}${TRAIT[top2.key]}が重なります。`;
+
+  // 第2文: プロファイルの形（尖り/丸さ）や深煎り比率で描写を変える
+  const spread = top1.v - low.v;
+  const darkRatio = valid.reduce((s, it) => s + (ROAST_ORDER[it.bean.roast] >= 3 ? it.weight : 0), 0)
+    / valid.reduce((s, it) => s + it.weight, 0);
+  let shapeText;
+  if (spread >= 2.6) shapeText = `${TRAIT[low.key]}を抑えて${TRAIT[top1.key]}を立たせた、輪郭のはっきりした個性派の設計。`;
+  else if (spread <= 1.3) shapeText = "6軸の凹凸が少ない、角のとれた丸い設計。";
+  else if (darkRatio >= 0.6) shapeText = "深煎り主体のロースト感が土台を支える構成。";
+  else if (roleW.accent >= 0.15 && roleW.accent <= 0.35) shapeText = "香りの豆をひと匙効かせた、立ち上がりの華やかな構成。";
+  else shapeText = `全体としては${GOALS[topGoal].label}に寄った構成。`;
+
+  // 第3文: カップの印象（組み合わせ条件で分岐を増やし、同文への収束を減らす）
+  let cup;
+  if (profile.acidity >= 4 && profile.fruity >= 4) cup = "口に含むと果実のジューシーさが弾ける一杯です。";
+  else if (profile.body >= 4.2 && profile.bitterness >= 3.2) cup = "ミルクにも負けない、力強い飲みごたえの一杯です。";
+  else if (profile.sweetness >= 4.2 && profile.acidity < 3) cup = "砂糖なしでも甘さを感じる、まろやかな一杯です。";
+  else if (profile.aroma >= 4.2 && profile.body <= 3) cup = "湯気とともに香りが立ちのぼる、軽やかな一杯です。";
+  else if (profile.bitterness >= 3.3 && profile.sweetness >= 3.9) cup = "ほろ苦さと甘みが交互に顔を出す、余韻の長い一杯です。";
+  else if (profile.acidity >= 3.6 && profile.body >= 3.6) cup = "酸とコクが押し引きする、メリハリのある一杯です。";
+  else if (profile.fruity >= 3.8) cup = "冷めるほどに果実味が顔を出す一杯です。";
+  else cup = "毎日飲んでも飽きのこない、穏やかにまとまった一杯です。";
+
+  // 相性ボーナスが効いていれば一言添える
+  const synergyText = synergyHits.length
+    ? `${NOTE_LABELS[synergyHits[0][0]]}×${NOTE_LABELS[synergyHits[0][1]]}の好相性も効いています。`
+    : "";
+
+  const taste = `${lead}${shapeText}${cup}${synergyText}`;
 
   // アドバイス
   const advice = [];
