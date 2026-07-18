@@ -156,6 +156,91 @@ function recommendBlends(bean, beans, topN = 3, goalKey = "balance") {
     .slice(0, topN);
 }
 
+// ---- 自作ブレンドの総合分析（N種対応・ブレンドをつくる機能で使用） ----
+
+// items = [{bean, weight}] を受け取り、味わい・完成度・ゴール適合率などを返す
+function analyzeBlend(items) {
+  const valid = items.filter((it) => it.bean && it.weight > 0);
+  const total = valid.reduce((s, it) => s + it.weight, 0);
+  if (!valid.length || total <= 0) return null;
+
+  const profile = mixProfile(valid);
+
+  // 役割の重み構成（ベース/キャラクター/アクセント）
+  const roleW = { base: 0, character: 0, accent: 0 };
+  for (const it of valid) roleW[beanRole(it.bean)] += it.weight / total;
+
+  // 各ゴールへの適合率（0〜100%）
+  const goalMatch = {};
+  for (const k in GOALS) {
+    goalMatch[k] = Math.max(0, Math.round(100 - goalDistance(profile, GOALS[k]) * 5.5));
+  }
+  const topGoal = Object.keys(GOALS).sort((a, b) => goalMatch[b] - goalMatch[a])[0];
+
+  // フレーバー相性（全ペア）
+  let synergy = 0;
+  const synergyHits = [];
+  for (let i = 0; i < valid.length; i++) {
+    for (let j = i + 1; j < valid.length; j++) {
+      const s = noteSynergy(valid[i].bean, valid[j].bean);
+      synergy += s.score;
+      synergyHits.push(...s.hits);
+    }
+  }
+
+  // 減点（同国・同地域・焙煎度の広がり）
+  let penalty = 0;
+  let sameOrigin = false;
+  for (let i = 0; i < valid.length; i++) {
+    for (let j = i + 1; j < valid.length; j++) {
+      if (valid[i].bean.country === valid[j].bean.country) { penalty -= 4; sameOrigin = true; }
+      if (valid[i].bean.region === valid[j].bean.region) penalty -= 6;
+    }
+  }
+  const roasts = valid.map((it) => ROAST_ORDER[it.bean.roast]);
+  const roastSpread = Math.max(...roasts) - Math.min(...roasts);
+  if (roastSpread >= 2) penalty -= 5 * (roastSpread - 1);
+
+  // 役割構成のスコア
+  const hasBase = roleW.base >= 0.35;
+  const hasCharacter = roleW.character + roleW.accent >= 0.15;
+  let roleScore;
+  if (hasBase && hasCharacter) roleScore = 24;
+  else if (roleW.accent > 0.5) roleScore = -14;
+  else if (roleW.character >= 0.8) roleScore = -8;
+  else if (roleW.base >= 0.85) roleScore = 4;
+  else roleScore = 8;
+
+  const score = Math.max(0, Math.min(100, Math.round(55 + roleScore + Math.min(synergy, 20) + penalty)));
+
+  let scoreLabel;
+  if (score >= 80) scoreLabel = "とてもよくまとまっています";
+  else if (score >= 65) scoreLabel = "バランスの良い配合です";
+  else if (score >= 50) scoreLabel = "悪くない配合です";
+  else scoreLabel = "少し尖った配合です";
+
+  // 味わいの要約（値の高い2軸）
+  const TRAIT = {
+    acidity: "明るい酸味", body: "重厚なコク", sweetness: "ふくよかな甘み",
+    bitterness: "しっかりした苦味", aroma: "華やかな香り", fruity: "豊かな果実味",
+  };
+  const topAxes = AXES.map((ax) => ({ key: ax.key, v: profile[ax.key] }))
+    .sort((a, b) => b.v - a.v)
+    .slice(0, 2);
+  const taste = `${TRAIT[topAxes[0].key]}と${TRAIT[topAxes[1].key]}が主役の、${GOALS[topGoal].label}系の味わい。${cupComment(profile)}`;
+
+  // アドバイス
+  const advice = [];
+  if (valid.length === 1) advice.push("2種類以上を混ぜると、ブレンドならではの奥行きが出ます。");
+  if (roastSpread >= 2) advice.push("焙煎度が離れた豆が混ざっています。近い焙煎度でまとめると味が安定します。");
+  if (roleW.accent > 0.5) advice.push("香りの強い豆（アクセント）が多めです。1〜2割に抑えると全体が締まります。");
+  if (!hasBase && valid.length >= 2) advice.push("コクのある土台（ベース）の豆を加えると、味に芯が通ります。");
+  if (hasBase && !hasCharacter && valid.length >= 2) advice.push("個性のある豆（キャラクター）を2〜4割足すと、表情が生まれます。");
+  if (sameOrigin) advice.push("同じ国の豆同士は似た傾向になりがち。別の産地を混ぜると変化が出ます。");
+
+  return { profile, roleW, goalMatch, topGoal, score, scoreLabel, taste, advice, synergyHits, roastSpread };
+}
+
 // ---- 推薦理由の文章生成（テンプレート） ----
 
 function topTrait(bean) {
