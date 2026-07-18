@@ -674,6 +674,39 @@ main { flex: 1; min-width: 0; max-width: 1040px; margin: 0 auto; padding: 40px 0
   margin: -4px 0 24px;
 }
 .pairing-example a { color: var(--ink-strong); font-weight: 700; }
+
+/* お菓子購入リンク（テーブル内の小さいリンク） */
+.pairing-table th:first-child { width: 26%; }
+.pairing-table td:last-child { width: 96px; white-space: nowrap; }
+.shop-mini {
+  font-family: var(--font-gothic);
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-strong);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-strong);
+  margin-right: 10px;
+  white-space: nowrap;
+}
+.shop-mini:last-child { margin-right: 0; }
+.shop-mini:hover { color: #4a3b35; border-color: #4a3b35; }
+
+/* 編集部のお気に入り（特定商品の紹介） */
+.pick-box {
+  border: 1px solid var(--ink-strong);
+  padding: 16px 18px;
+  margin: -4px 0 24px;
+}
+.pick-box-label {
+  font-family: var(--font-gothic);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.pick-box h4 { font-family: var(--font-gothic); font-size: 14px; margin-bottom: 6px; }
+.pick-box p { font-size: 12.5px; margin-bottom: 10px; }
 .page table.info {
   width: 100%;
   border-collapse: collapse;
