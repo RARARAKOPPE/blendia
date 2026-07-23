@@ -3,3 +3,5 @@ PROJECT_INFO.md
 # ブランド検討用の作業ファイル（採用案のみ公開する）
 assets/brand/candidates.html
 assets/brand/work/
+# 記事の下書きストック（公開指示があったものだけ articles/ へ移す）
+drafts/
